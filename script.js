@@ -1,3 +1,6 @@
+let chartInstance; // Referencia al gráfico.
+    let axesCentered = false; // Estado de los ejes.
+
     /**
      * Crea un gráfico dinámico basado en los datos calculados.
      * @param {string} canvasId - ID del canvas donde se dibuja el gráfico.
@@ -7,8 +10,13 @@
      */
     function createDynamicGraph(canvasId, label, xValues, yValues) {
         const ctx = document.getElementById(canvasId).getContext('2d');
-  
-        new Chart(ctx, {
+
+        // Destruye el gráfico existente si ya hay uno.
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
+
+        chartInstance = new Chart(ctx, {
           type: 'scatter',
           data: {
             datasets: [{
@@ -26,43 +34,61 @@
             scales: {
               x: {
                 type: 'linear',
-                position:'bottom',
+                position: 'bottom',
                 grid: { color: 'white' },
                 ticks: { color: 'white' },
                 min: Math.min(...xValues),
-                max: Math.max(...xValues)
+                max: Math.max(...xValues),
               },
               y: {
                 type: 'linear',
-                position:'left',
-                grid: { color: 'white' },
-                ticks: {
-                  color: 'white',
-                  stepSize: 1, // Forzar que el eje Y muestre cada valor
-                  callback: function(value) {
-                    return value; // Mostrar todos los valores calculados
-                  }
-                },
+                position: 'left',
+                grid: { color: 'orange' },
+                ticks: { color: 'white' },
                 min: Math.min(...yValues) - 1,
-                max: Math.max(...yValues) + 1
+                max: Math.max(...yValues) + 1,
               }
             },
             plugins: {
               legend: {
                 display: true,
-                labels: { color: 'white' }
               }
             }
           }
         });
-      }
-  
-      /**
-       * Genera una tabla de valores.
-       * @param {Array} xValues - Valores de x.
-       * @param {Array} yValues - Valores de y correspondientes.
-       */
-      function populateTable(xValues, yValues) {
+    }
+
+    /**
+     * Centra los ejes del gráfico visualmente o los restaura a su posición original.
+     */
+    function centerAxes() {
+        if (!chartInstance) {
+            alert('Primero debe generar un gráfico.');
+            return;
+        }
+
+        const scales = chartInstance.options.scales;
+
+        if (axesCentered) {
+            // Restaura los ejes a su posición original.
+            scales.x.position = 'bottom';
+            scales.y.position = 'left';
+        } else {
+            // Cambia la posición de los ejes a 'center'.
+            scales.x.position = 'center';
+            scales.y.position = 'center';
+        }
+
+        axesCentered = !axesCentered; // Alterna el estado.
+        chartInstance.update();
+    }
+
+    /**
+     * Genera una tabla de valores.
+     * @param {Array} xValues - Valores de x.
+     * @param {Array} yValues - Valores de y correspondientes.
+     */
+    function populateTable(xValues, yValues) {
         const tableBody = document.getElementById('valuesTable').querySelector('tbody');
         tableBody.innerHTML = '';
         xValues.forEach((x, i) => {
@@ -75,18 +101,19 @@
           row.appendChild(yCell);
           tableBody.appendChild(row);
         });
-      }
-  
-      document.getElementById('generateGraphButton').addEventListener('click', () => {
+    }
+
+    // Configura el botón "Generar Gráfico".
+    document.getElementById('generateGraphButton').addEventListener('click', () => {
         const funcInput = document.getElementById('functionInput').value;
         const xMin = parseInt(document.getElementById('xMinInput').value);
         const xMax = parseInt(document.getElementById('xMaxInput').value);
-  
+
         if (!funcInput || isNaN(xMin) || isNaN(xMax)) {
           alert('Por favor, ingrese valores válidos.');
           return;
         }
-  
+
         let func;
         try {
           func = new Function('x', `return ${funcInput}`);
@@ -94,10 +121,10 @@
           alert('La función ingresada no es válida.');
           return;
         }
-  
+
         const xValues = [];
         const yValues = [];
-        for (let x = xMin; x <= xMax; x++) { // Generar valores enteros de x
+        for (let x = xMin; x <= xMax; x++) {
           xValues.push(x);
           try {
             yValues.push(func(x));
@@ -106,7 +133,10 @@
             return;
           }
         }
-  
+
         createDynamicGraph('dynamicGraphCanvas', `f(x) = ${funcInput}`, xValues, yValues);
         populateTable(xValues, yValues);
-      });
+    });
+
+    // Configura el botón "Centrar Ejes".
+    document.getElementById('centerAxesButton').addEventListener('click', centerAxes);
