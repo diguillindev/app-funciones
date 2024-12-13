@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gráficos Dinámicos con Valores Exactos</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <h1>Gráficos Dinámicos</h1>
+  <p>
+    Ingrese una función matemática en términos de <strong>x</strong>, junto con los límites del rango de valores para <strong>x</strong>. 
+    Los valores de \(y\) se calcularán para cada número entero de \(x\) dentro del rango. 
+    Ejemplo de función: <strong>3 * x + 2</strong>, <strong>x ** 2 - 4</strong>, etc.
+  </p>
+
+  <div class="input-group">
+    <label for="functionInput">Función (en términos de x):</label>
+    <input type="text" id="functionInput" placeholder="Ejemplo: 3 * x + 2" />
+  </div>
+  <div class="input-group">
+    <label for="xMinInput">Valor mínimo de x:</label>
+    <input type="number" id="xMinInput" placeholder="-5" />
+  </div>
+  <div class="input-group">
+    <label for="xMaxInput">Valor máximo de x:</label>
+    <input type="number" id="xMaxInput" placeholder="5" />
+  </div>
+  <button id="generateGraphButton">Generar Gráfico y Tabla</button>
+  <h2>Tabla de Valores</h2>
+  <table id="valuesTable">
+    <thead>
+      <tr>
+        <th>x</th>
+        <th>y</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  <h2>Gráfico</h2>
+  <canvas id="dynamicGraphCanvas" width="600" height="400"></canvas>
+  <script src="script.js"></script>
+</body>
+
+</html>

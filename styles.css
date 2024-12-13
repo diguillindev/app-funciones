@@ -1,0 +1,45 @@
+canvas {
+    background-color: black;
+    margin-bottom: 20px;
+  }
+  h2, p, label, button, table {
+    color: white;
+  }
+  body {
+    background-color: #121212;
+    font-family: Arial, sans-serif;
+  }
+  .input-group {
+    margin-bottom: 20px;
+  }
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  input, button {
+    padding: 10px;
+    font-size: 16px;
+  }
+  button {
+    margin-top: 10px;
+    background-color: #1e90ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #0073e6;
+  }
+  table {
+    border-collapse: collapse;
+    width: 50%;
+    margin: 20px 0;
+    margin-left: 50px;
+  }
+  table, th, td {
+    border: 1px solid white;
+  }
+  th, td {
+    text-align: center;
+    padding: 8px;
+  }
